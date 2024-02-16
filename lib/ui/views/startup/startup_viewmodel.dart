@@ -27,11 +27,12 @@ class StartupViewModel extends BaseViewModel {
       if (token != null && user != null) {
         userLoggedIn.value = true;
         profile.value = user;
-        _navigationService.replaceWithLoginView();
+        _navigationService.replaceWithHomeView();
       }else{
         if(user != null){
           profile.value = user;}
-        _navigationService.replaceWithHomeView();
+        _navigationService.replaceWithLoginView();
+
       }
 
 

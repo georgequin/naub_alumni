@@ -96,7 +96,6 @@ class AuthViewModel extends BaseViewModel {
         apiCall: () => UserControllerApi(_apiManager.apiClient).login(loginRequest),
         endpoint: 'login'
       );
-
       if (response != null && response.success) {
         userLoggedIn.value = true;
         profile.value = response.data?.user;
@@ -161,7 +160,7 @@ class AuthViewModel extends BaseViewModel {
       // Using ApiManager to perform the API call now
       var response = await _apiManager.performApiCall(
           apiCall: () => ProfessionControllerApi(_apiManager.apiClient).getAllProfessions(),
-          endpoint: 'get professions'
+          endpoint: 'get professions ${ProfessionControllerApi(_apiManager.apiClient).getAllProfessions()}'
       );
 
       if (response != null && response.success) {

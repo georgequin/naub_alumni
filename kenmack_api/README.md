@@ -53,7 +53,7 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://localhost:8080*
+All URIs are relative to *http://104.248.3.252:8080*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
