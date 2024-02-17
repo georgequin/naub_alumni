@@ -21,7 +21,7 @@ import '../dashboard/dashboard_view.dart';
 class HomeViewModel extends BaseViewModel {
   final _dialogService = locator<DialogService>();
   final _bottomSheetService = locator<BottomSheetService>();
-  List<Service> services = [];
+  List<ServicesPOJO> services = [];
   List<Widget> pages = [
      DashboardView(),
      ServiceView(),

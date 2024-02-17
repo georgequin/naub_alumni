@@ -11,7 +11,7 @@
 part of openapi.api;
 
 class ApiClient {
-  ApiClient({this.basePath = 'http://104.248.3.252:8080', this.authentication,});
+  ApiClient({this.basePath = 'http://localhost:8080', this.authentication,});
 
   final String basePath;
   final Authentication? authentication;
@@ -182,28 +182,30 @@ class ApiClient {
           return valueString == 'true' || valueString == '1';
         case 'DateTime':
           return value is DateTime ? value : DateTime.tryParse(value);
-        case 'Country':
-          return Country.fromJson(value);
+        case 'CountryPOJO':
+          return CountryPOJO.fromJson(value);
         case 'GlobalResponseDtoListProfession':
           return GlobalResponseDtoListProfession.fromJson(value);
         case 'GlobalResponseDtoUserDataPojo':
           return GlobalResponseDtoUserDataPojo.fromJson(value);
         case 'LoginRequestDTO':
           return LoginRequestDTO.fromJson(value);
-        case 'Permission':
-          return Permission.fromJson(value);
-        case 'Picture':
-          return Picture.fromJson(value);
+        case 'PicturePOJO':
+          return PicturePOJO.fromJson(value);
         case 'Profession':
           return Profession.fromJson(value);
-        case 'Role':
-          return Role.fromJson(value);
-        case 'Service':
-          return Service.fromJson(value);
-        case 'User':
-          return User.fromJson(value);
+        case 'ProfessionPOJO':
+          return ProfessionPOJO.fromJson(value);
+        case 'ServiceCreationDTO':
+          return ServiceCreationDTO.fromJson(value);
+        case 'ServicesPOJO':
+          return ServicesPOJO.fromJson(value);
         case 'UserDataPojo':
           return UserDataPojo.fromJson(value);
+        case 'UserDetailDTO':
+          return UserDetailDTO.fromJson(value);
+        case 'UserPOJO':
+          return UserPOJO.fromJson(value);
         case 'UserRegistrationDTO':
           return UserRegistrationDTO.fromJson(value);
         default:

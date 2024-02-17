@@ -16,8 +16,8 @@ class NotificationViewModel extends BaseViewModel {
 
   int selectedIndex = 0;
   final log = getLogger("DashboardViewModel");
-  List<Service> recommendedService = [];
-  List<Service> services = [];
+  List<ServicesPOJO> recommendedService = [];
+  List<ServicesPOJO> services = [];
 
   void changeSelected(int i) {
     selectedIndex = i;
@@ -93,14 +93,14 @@ class NotificationViewModel extends BaseViewModel {
     setBusyForObject(recommendedService, false);
   }
 
-  String encodeServicesList(List<Service> services) {
-    return jsonEncode(services.map((service) => service.toJson()).toList());
+  String encodeServicesList(List<ServicesPOJO> services) {
+    return jsonEncode(services.map((ServicesPOJO) => ServicesPOJO.toJson()).toList());
   }
 
   // Use this to decode a JSON string into a list of services
-  List<Service> decodeServicesList(String servicesJson) {
+  List<ServicesPOJO> decodeServicesList(String servicesJson) {
     Iterable l = json.decode(servicesJson);
-    List<Service> services = List<Service>.from(l.map((model) => Service.fromJson(model)));
+    List<ServicesPOJO> services = List<ServicesPOJO>.from(l.map((model) => ServicesPOJO.fromJson(model)));
     return services;
   }
 

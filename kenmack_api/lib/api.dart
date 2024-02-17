@@ -32,17 +32,18 @@ part 'api/profession_controller_api.dart';
 part 'api/service_controller_api.dart';
 part 'api/user_controller_api.dart';
 
-part 'model/country.dart';
+part 'model/country_pojo.dart';
 part 'model/global_response_dto_list_profession.dart';
 part 'model/global_response_dto_user_data_pojo.dart';
 part 'model/login_request_dto.dart';
-part 'model/permission.dart';
-part 'model/picture.dart';
+part 'model/picture_pojo.dart';
 part 'model/profession.dart';
-part 'model/role.dart';
-part 'model/service.dart';
-part 'model/user.dart';
+part 'model/profession_pojo.dart';
+part 'model/service_creation_dto.dart';
+part 'model/services_pojo.dart';
 part 'model/user_data_pojo.dart';
+part 'model/user_detail_dto.dart';
+part 'model/user_pojo.dart';
 part 'model/user_registration_dto.dart';
 
 

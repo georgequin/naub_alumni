@@ -68,7 +68,7 @@ class ApiService {
     }
   }
 
-  Future<List<Service>> fetchRecommendedServices(int professionId) async {
+  Future<List<ServicesPOJO>> fetchRecommendedServices(int professionId) async {
     final servicesApi = ServiceControllerApi(apiClient);
     try {
       final recommendedServices = await servicesApi.getRecommendedServices(professionId);
@@ -79,7 +79,7 @@ class ApiService {
     }
   }
 
-  Future<List<Service>> fetchServices() async {
+  Future<List<ServicesPOJO>> fetchServices() async {
     final servicesApi = ServiceControllerApi(apiClient);
     try {
       final services = await servicesApi.getAllServices();

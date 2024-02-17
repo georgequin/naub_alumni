@@ -126,6 +126,7 @@ class ApiManager {
       _snackbarService.showSnackbar(message: "phone number already registered. try another");
     }
     else {
+      //TODO remove the actual error
       _snackbarService.showSnackbar(message: "An error occurred. Please try again. ${error}");
     }
   }

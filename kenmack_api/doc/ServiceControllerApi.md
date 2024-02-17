@@ -5,16 +5,58 @@
 import 'package:openapi/api.dart';
 ```
 
-All URIs are relative to *http://104.248.3.252:8080*
+All URIs are relative to *http://localhost:8080*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**createService**](ServiceControllerApi.md#createservice) | **POST** /services/create | 
 [**getAllServices**](ServiceControllerApi.md#getallservices) | **GET** /services | 
 [**getRecommendedServices**](ServiceControllerApi.md#getrecommendedservices) | **GET** /services/recommended | 
 
 
+# **createService**
+> Object createService(serviceCreationDTO)
+
+
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+
+final api_instance = ServiceControllerApi();
+final serviceCreationDTO = ServiceCreationDTO(); // ServiceCreationDTO | 
+
+try {
+    final result = api_instance.createService(serviceCreationDTO);
+    print(result);
+} catch (e) {
+    print('Exception when calling ServiceControllerApi->createService: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **serviceCreationDTO** | [**ServiceCreationDTO**](ServiceCreationDTO.md)|  | 
+
+### Return type
+
+[**Object**](Object.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **getAllServices**
-> List<Service> getAllServices()
+> List<ServicesPOJO> getAllServices()
 
 
 
@@ -37,7 +79,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**List<Service>**](Service.md)
+[**List<ServicesPOJO>**](ServicesPOJO.md)
 
 ### Authorization
 
@@ -51,7 +93,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getRecommendedServices**
-> List<Service> getRecommendedServices(professionId)
+> List<ServicesPOJO> getRecommendedServices(professionId)
 
 
 
@@ -78,7 +120,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**List<Service>**](Service.md)
+[**List<ServicesPOJO>**](ServicesPOJO.md)
 
 ### Authorization
 

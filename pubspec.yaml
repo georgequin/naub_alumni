@@ -53,6 +53,9 @@ dependencies:
   fluttertoast: ^8.0.8
   cached_network_image: ^3.3.1
   url_launcher: ^6.1.13
+  image_picker: ^1.0.7
+  flutter_image_compress: ^2.0.3
+  open_mail_app: ^0.4.5
 
 
 dev_dependencies:

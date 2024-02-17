@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,6 +9,7 @@ import 'package:kenmack/state.dart';
 import 'package:kenmack/ui/views/dashboard/recommendedCard.dart';
 import 'package:openapi/api.dart';
 import 'package:stacked/stacked.dart';
+import '../../../utils/base64Image.dart';
 import '../../common/app_colors.dart';
 import '../../common/ui_helpers.dart';
 import 'dashboard_viewmodel.dart';
@@ -125,7 +128,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                 },
                 child: Card(
                   color: kcFadeColor, // Set the background color of the card
-                  margin: const EdgeInsets.symmetric(horizontal: 13.0, vertical: 8.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 8.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16), // Increase the radius here
                   ),
@@ -184,9 +187,9 @@ class DashboardView extends StackedView<DashboardViewModel> {
                   scrollDirection: Axis.horizontal,
                   itemCount: viewModel.recommendedService.length,
                   itemBuilder: (context, index) {
-                    Service recommended = viewModel.recommendedService[index];
+                    ServicesPOJO recommended = viewModel.recommendedService[index];
                     return Container(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(2),
                       margin: const EdgeInsets.only(right: 15, top: 10),
                       width: 260,
                       decoration: BoxDecoration(
@@ -211,7 +214,6 @@ class DashboardView extends StackedView<DashboardViewModel> {
                           buttonText: 'Explore more',
                           imageUrl: recommended.picture?.url ?? 'https://via.placeholder.com/120', // Replace with your actual image URL
                           onClick: () {
-                            print('Card clicked');
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => ServiceDetailsPage(service: recommended),
                             ));
@@ -259,7 +261,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
                     return Container(); // or SizedBox.shrink()
                   }
 
-                  Service service = viewModel.services.elementAt(index);
+                  ServicesPOJO service = viewModel.services.elementAt(index);
                   return Column(
                     children: [
                       InkWell(
@@ -298,20 +300,11 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                 ),
                                 child: Column(
                                   children: [
-                                    CachedNetworkImage(
-                                      placeholder: (context, url) => Center(
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2.0, // Make the loader thinner
-                                          valueColor: AlwaysStoppedAnimation<Color>(kcSecondaryColor), // Change the loader color
-                                        ),
-                                      ),
-                                      imageUrl:  service.picture?.url ?? 'https://via.placeholder.com/150',
-                                      height: 114,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                      errorWidget: (context, url, error) => const Icon(Icons.error),
-                                      fadeInDuration: const Duration(milliseconds: 500),
-                                      fadeOutDuration: const Duration(milliseconds: 300),
+                                    Base64Image(
+                                      base64String: service.picture?.url,
+                                      width: double.infinity, // or specify a width
+                                      height: 114, // or specify a height
+                                      fit: BoxFit.cover, // adjust the fit as needed
                                     ),
                                     Padding( // Add padding to the row
                                       padding: const EdgeInsets.fromLTRB(5.0, 5.0, 5.0,0), // Adjust padding as needed
@@ -368,6 +361,29 @@ class DashboardView extends StackedView<DashboardViewModel> {
       ),
     );
   }
+
+  Widget displayBase64Image(String? base64String) {
+    if (base64String == null) {
+      return const Icon(Icons.error); // or any placeholder
+    }
+    try {
+      // Remove data URL scheme if present
+      if (base64String.startsWith('data:image')) {
+        base64String = base64String.split(',').last;
+      }
+      final Uint8List imageBytes = base64Decode(base64String);
+      return Image.memory(
+        imageBytes,
+        height: 114,
+        width: double.infinity,
+        fit: BoxFit.cover,
+      );
+    } catch (e) {
+      print("Error decoding Base64 string: $e");
+      return const Icon(Icons.error); // Error icon or placeholder if decoding fails
+    }
+  }
+
 
   @override
   void onViewModelReady(DashboardViewModel viewModel) {

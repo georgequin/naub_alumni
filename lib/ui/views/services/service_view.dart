@@ -4,6 +4,7 @@ import 'package:kenmack/ui/views/services/service_viewmodel.dart';
 import 'package:openapi/api.dart';
 import 'package:stacked/stacked.dart';
 import '../../../state.dart';
+import '../../../utils/base64Image.dart';
 import '../../common/app_colors.dart';
 import '../../common/ui_helpers.dart';
 import '../dashboard/details_view.dart';
@@ -83,7 +84,7 @@ class ServiceView extends StackedView<ServiceViewModel> {
 
 
 class ServiceCard extends StatelessWidget {
-  final Service service;
+  final ServicesPOJO service;
 
   const ServiceCard({Key? key, required this.service}) : super(key: key);
 
@@ -116,20 +117,11 @@ class ServiceCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CachedNetworkImage(
-                          placeholder: (context, url) => Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.0, // Make the loader thinner
-                              valueColor: AlwaysStoppedAnimation<Color>(kcSecondaryColor), // Change the loader color
-                            ),
-                          ),
-                          imageUrl:  service.picture?.url ?? 'https://via.placeholder.com/150',
-                          height: 114,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorWidget: (context, url, error) => const Icon(Icons.error),
-                          fadeInDuration: const Duration(milliseconds: 500),
-                          fadeOutDuration: const Duration(milliseconds: 300),
+                        Base64Image(
+                          base64String: service.picture?.url,
+                          width: double.infinity, // or specify a width
+                          height: 114, // or specify a height
+                          fit: BoxFit.cover, // adjust the fit as needed
                         ),
                         Padding( // Add padding to the row
                           padding: const EdgeInsets.fromLTRB(5.0, 5.0, 5.0,0), // Adjust padding as needed

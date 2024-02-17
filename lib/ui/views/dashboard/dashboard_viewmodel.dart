@@ -19,8 +19,8 @@ class DashboardViewModel extends BaseViewModel {
 
   int selectedIndex = 0;
   final log = getLogger("DashboardViewModel");
-  List<Service> recommendedService = [];
-  List<Service> services = [];
+  List<ServicesPOJO> recommendedService = [];
+  List<ServicesPOJO> services = [];
 
   bool _isCardVisible = true;
 
@@ -113,14 +113,14 @@ class DashboardViewModel extends BaseViewModel {
     setBusyForObject(recommendedService, false);
   }
 
-  String encodeServicesList(List<Service> services) {
+  String encodeServicesList(List<ServicesPOJO> services) {
     return jsonEncode(services.map((service) => service.toJson()).toList());
   }
 
   // Use this to decode a JSON string into a list of services
-  List<Service> decodeServicesList(String servicesJson) {
+  List<ServicesPOJO> decodeServicesList(String servicesJson) {
     Iterable l = json.decode(servicesJson);
-    List<Service> services = List<Service>.from(l.map((model) => Service.fromJson(model)));
+    List<ServicesPOJO> services = List<ServicesPOJO>.from(l.map((model) => ServicesPOJO.fromJson(model)));
     return services;
   }
 

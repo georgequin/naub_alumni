@@ -52,7 +52,7 @@ class AuthViewModel extends BaseViewModel {
     String? token = await locator<LocalStorage>().fetch(LocalStorageDir.authToken);
     if (token != null && JwtDecoder.isExpired(token)) {
         userLoggedIn.value = true;
-        User? userJson = await locator<LocalStorage>().fetch(LocalStorageDir.authUser);
+        UserPOJO? userJson = await locator<LocalStorage>().fetch(LocalStorageDir.authUser);
         if (userJson != null) {
           profile.value = userJson;
         }
@@ -63,6 +63,7 @@ class AuthViewModel extends BaseViewModel {
     if( token != null && !JwtDecoder.isExpired(token)){
       await locator<LocalStorage>().delete(LocalStorageDir.authToken);
       userLoggedIn.value = false;
+      locator<NavigationService>().clearStackAndShow(Routes.loginView);
     }
 
 
@@ -129,17 +130,19 @@ class AuthViewModel extends BaseViewModel {
             email: email.text,
             phone: phone.text,
             password: password.text,
-            professionId: selectedProfessionId
-            // Add other required fields here...
+            professionId: selectedProfessionId,
           );
+
     log.i('Attempting to register with: ${registrationRequest.toJson()}');
 
     try {
-      // Using ApiManager to perform the API call now
+
       var response = await _apiManager.performApiCall(
           apiCall: () => UserControllerApi(_apiManager.apiClient).registerUser(registrationRequest),
-          endpoint: 'login'
+          endpoint: 'register'
       );
+
+      print('value of reg response is : $response');
 
       if (response != null && response.success) {
         locator<NavigationService>().clearStackAndShow(Routes.loginView);

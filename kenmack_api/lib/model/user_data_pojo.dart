@@ -40,7 +40,7 @@ class UserDataPojo {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  User? user;
+  UserPOJO? user;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is UserDataPojo &&
@@ -99,7 +99,7 @@ class UserDataPojo {
       return UserDataPojo(
         accessToken: mapValueOfType<String>(json, r'accessToken'),
         refreshToken: mapValueOfType<String>(json, r'refreshToken'),
-        user: User.fromJson(json[r'user']),
+        user: UserPOJO.fromJson(json[r'user']),
       );
     }
     return null;

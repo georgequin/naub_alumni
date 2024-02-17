@@ -4,10 +4,11 @@ import 'package:kenmack/ui/common/ui_helpers.dart';
 import 'package:openapi/api.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../utils/base64Image.dart';
 import '../../common/app_colors.dart';
 
 class ServiceDetailsPage extends StatelessWidget {
-  final Service service;
+  final ServicesPOJO service;
   final bool isModal;
 
   const ServiceDetailsPage({
@@ -32,20 +33,11 @@ class ServiceDetailsPage extends StatelessWidget {
           Expanded(
             child: ListView(
               children: <Widget>[
-                CachedNetworkImage(
-                  placeholder: (context, url) => Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.0, // Make the loader thinner
-                      valueColor: AlwaysStoppedAnimation<Color>(kcSecondaryColor), // Change the loader color
-                    ),
-                  ),
-                  imageUrl:  service.picture?.url ?? 'https://via.placeholder.com/150',
-                  height: 211,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                  fadeInDuration: const Duration(milliseconds: 500),
-                  fadeOutDuration: const Duration(milliseconds: 300),
+                Base64Image(
+                  base64String: service.picture?.url,
+                  width: double.infinity, // or specify a width
+                  height: 211, // or specify a height
+                  fit: BoxFit.cover, // adjust the fit as needed
                 ),
                 verticalSpaceSmall,
                 Padding(

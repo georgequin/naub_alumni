@@ -9,8 +9,8 @@ import '../../../core/utils/local_store_dir.dart';
 import '../../../core/utils/local_stotage.dart';
 
 class ServiceViewModel extends BaseViewModel {
-  List<Service> services = [];
-  List<Service> filteredServices = [];
+  List<ServicesPOJO> services = [];
+  List<ServicesPOJO> filteredServices = [];
   String searchQuery = '';
   final ApiManager _apiManager = ApiManager(locator<ApiClient>());
 
@@ -45,9 +45,9 @@ class ServiceViewModel extends BaseViewModel {
     }
   }
 
-  List<Service> decodeServicesList(String servicesJson) {
+  List<ServicesPOJO> decodeServicesList(String servicesJson) {
     Iterable l = json.decode(servicesJson);
-    List<Service> services = List<Service>.from(l.map((model) => Service.fromJson(model)));
+    List<ServicesPOJO> services = List<ServicesPOJO>.from(l.map((model) => ServicesPOJO.fromJson(model)));
     return services;
   }
 
@@ -68,7 +68,7 @@ class ServiceViewModel extends BaseViewModel {
     setBusyForObject(services, false);
   }
 
-  String encodeServicesList(List<Service> services) {
+  String encodeServicesList(List<ServicesPOJO> services) {
     return jsonEncode(services.map((service) => service.toJson()).toList());
   }
 

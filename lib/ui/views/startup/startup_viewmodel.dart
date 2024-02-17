@@ -18,7 +18,7 @@ class StartupViewModel extends BaseViewModel {
 
 
     String? token = await locator<LocalStorage>().fetch(LocalStorageDir.authToken);
-    User? user = await locator<LocalStorage>().fetch(LocalStorageDir.authUser);
+    UserPOJO? user = await locator<LocalStorage>().fetch(LocalStorageDir.authUser);
     bool? onboarded = await locator<LocalStorage>().fetch(LocalStorageDir.onboarded);
 
     if (onboarded == null || onboarded == false) {

@@ -53,32 +53,37 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://104.248.3.252:8080*
+All URIs are relative to *http://localhost:8080*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *ProfessionControllerApi* | [**getAllProfessions**](doc//ProfessionControllerApi.md#getallprofessions) | **GET** /profession/professions | 
+*ServiceControllerApi* | [**createService**](doc//ServiceControllerApi.md#createservice) | **POST** /services/create | 
 *ServiceControllerApi* | [**getAllServices**](doc//ServiceControllerApi.md#getallservices) | **GET** /services | 
 *ServiceControllerApi* | [**getRecommendedServices**](doc//ServiceControllerApi.md#getrecommendedservices) | **GET** /services/recommended | 
+*UserControllerApi* | [**getAllCountries**](doc//UserControllerApi.md#getallcountries) | **GET** /auth/user/countries | 
+*UserControllerApi* | [**getUserDetails**](doc//UserControllerApi.md#getuserdetails) | **GET** /auth/user/{userId} | 
 *UserControllerApi* | [**login**](doc//UserControllerApi.md#login) | **POST** /auth/login | 
 *UserControllerApi* | [**logout**](doc//UserControllerApi.md#logout) | **POST** /auth/logout | 
 *UserControllerApi* | [**refreshToken**](doc//UserControllerApi.md#refreshtoken) | **POST** /auth/refresh-token | 
 *UserControllerApi* | [**registerUser**](doc//UserControllerApi.md#registeruser) | **POST** /auth/register | Receives user details and create new user
+*UserControllerApi* | [**updateUserDetails**](doc//UserControllerApi.md#updateuserdetails) | **PUT** /auth/user/{id}/details | 
 
 
 ## Documentation For Models
 
- - [Country](doc//Country.md)
+ - [CountryPOJO](doc//CountryPOJO.md)
  - [GlobalResponseDtoListProfession](doc//GlobalResponseDtoListProfession.md)
  - [GlobalResponseDtoUserDataPojo](doc//GlobalResponseDtoUserDataPojo.md)
  - [LoginRequestDTO](doc//LoginRequestDTO.md)
- - [Permission](doc//Permission.md)
- - [Picture](doc//Picture.md)
+ - [PicturePOJO](doc//PicturePOJO.md)
  - [Profession](doc//Profession.md)
- - [Role](doc//Role.md)
- - [Service](doc//Service.md)
- - [User](doc//User.md)
+ - [ProfessionPOJO](doc//ProfessionPOJO.md)
+ - [ServiceCreationDTO](doc//ServiceCreationDTO.md)
+ - [ServicesPOJO](doc//ServicesPOJO.md)
  - [UserDataPojo](doc//UserDataPojo.md)
+ - [UserDetailDTO](doc//UserDetailDTO.md)
+ - [UserPOJO](doc//UserPOJO.md)
  - [UserRegistrationDTO](doc//UserRegistrationDTO.md)
 
 

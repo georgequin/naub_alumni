@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:kenmack/state.dart';
 import 'package:kenmack/ui/common/app_colors.dart';
 import 'package:kenmack/ui/common/ui_helpers.dart';
+import 'package:kenmack/ui/views/account/profile.dart';
+import 'package:kenmack/ui/views/account/support.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../../../app/app.locator.dart';
@@ -28,7 +30,7 @@ class AccountView extends StatelessWidget {
               borderRadius: const BorderRadius.all( Radius.circular(12))
             ),
             child: ListTile(
-              title: Text(
+              title: const Text(
                 'Welcome',
                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
@@ -38,7 +40,9 @@ class AccountView extends StatelessWidget {
               ),
               trailing: Icon(Icons.chevron_right, color: Colors.white),
               onTap: () {
-                // Handle profile navigation or action
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ProfilePage(),
+                ));
               },
             ),
           ),
@@ -49,20 +53,22 @@ class AccountView extends StatelessWidget {
               children: ListTile.divideTiles(
                 context: context,
                 tiles: [
-                  ListTile(
-                    leading: Icon(Icons.security, color: kcPrimaryColor,),
-                    title: Text('Security'),
-                    trailing: Icon(Icons.chevron_right, color: kcPrimaryColor),
-                    onTap: () {
-                      // Handle security navigation or action
-                    },
-                  ),
+                  // ListTile(
+                  //   leading: Icon(Icons.security, color: kcPrimaryColor,),
+                  //   title: Text('Security'),
+                  //   trailing: Icon(Icons.chevron_right, color: kcPrimaryColor),
+                  //   onTap: () {
+                  //     // Handle security navigation or action
+                  //   },
+                  // ),
                   ListTile(
                     leading: Icon(Icons.help_outline, color: kcPrimaryColor),
                     title: Text('Support Center'),
                     trailing: Icon(Icons.chevron_right, color: kcPrimaryColor),
                     onTap: () {
-                      // Handle support center navigation or action
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => Support(),
+                      ));
                     },
                   ),
                   ListTile(

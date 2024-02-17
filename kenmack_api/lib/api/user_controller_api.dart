@@ -16,6 +16,98 @@ class UserControllerApi {
 
   final ApiClient apiClient;
 
+  /// Performs an HTTP 'GET /auth/user/countries' operation and returns the [Response].
+  Future<Response> getAllCountriesWithHttpInfo() async {
+    // ignore: prefer_const_declarations
+    final path = r'/auth/user/countries';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  Future<List<CountryPOJO>?> getAllCountries() async {
+    final response = await getAllCountriesWithHttpInfo();
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      final responseBody = await _decodeBodyBytes(response);
+      return (await apiClient.deserializeAsync(responseBody, 'List<CountryPOJO>') as List)
+        .cast<CountryPOJO>()
+        .toList(growable: false);
+
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'GET /auth/user/{userId}' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [int] userId (required):
+  Future<Response> getUserDetailsWithHttpInfo(int userId,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/auth/user/{userId}'
+      .replaceAll('{userId}', userId.toString());
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [int] userId (required):
+  Future<UserPOJO?> getUserDetails(int userId,) async {
+    final response = await getUserDetailsWithHttpInfo(userId,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'UserPOJO',) as UserPOJO;
+    
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'POST /auth/login' operation and returns the [Response].
   /// Parameters:
   ///
@@ -188,6 +280,58 @@ class UserControllerApi {
   /// * [UserRegistrationDTO] userRegistrationDTO (required):
   Future<Object?> registerUser(UserRegistrationDTO userRegistrationDTO,) async {
     final response = await registerUserWithHttpInfo(userRegistrationDTO,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Object',) as Object;
+    
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'PUT /auth/user/{id}/details' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [int] id (required):
+  ///
+  /// * [UserDetailDTO] userDetailDTO (required):
+  Future<Response> updateUserDetailsWithHttpInfo(int id, UserDetailDTO userDetailDTO,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/auth/user/{id}/details'
+      .replaceAll('{id}', id.toString());
+
+    // ignore: prefer_final_locals
+    Object? postBody = userDetailDTO;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'PUT',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [int] id (required):
+  ///
+  /// * [UserDetailDTO] userDetailDTO (required):
+  Future<Object?> updateUserDetails(int id, UserDetailDTO userDetailDTO,) async {
+    final response = await updateUserDetailsWithHttpInfo(id, userDetailDTO,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

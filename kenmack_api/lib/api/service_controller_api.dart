@@ -16,6 +16,53 @@ class ServiceControllerApi {
 
   final ApiClient apiClient;
 
+  /// Performs an HTTP 'POST /services/create' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [ServiceCreationDTO] serviceCreationDTO (required):
+  Future<Response> createServiceWithHttpInfo(ServiceCreationDTO serviceCreationDTO,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/services/create';
+
+    // ignore: prefer_final_locals
+    Object? postBody = serviceCreationDTO;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [ServiceCreationDTO] serviceCreationDTO (required):
+  Future<Object?> createService(ServiceCreationDTO serviceCreationDTO,) async {
+    final response = await createServiceWithHttpInfo(serviceCreationDTO,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Object',) as Object;
+    
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'GET /services' operation and returns the [Response].
   Future<Response> getAllServicesWithHttpInfo() async {
     // ignore: prefer_const_declarations
@@ -42,7 +89,7 @@ class ServiceControllerApi {
     );
   }
 
-  Future<List<Service>?> getAllServices() async {
+  Future<List<ServicesPOJO>?> getAllServices() async {
     final response = await getAllServicesWithHttpInfo();
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
@@ -52,8 +99,8 @@ class ServiceControllerApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<Service>') as List)
-        .cast<Service>()
+      return (await apiClient.deserializeAsync(responseBody, 'List<ServicesPOJO>') as List)
+        .cast<ServicesPOJO>()
         .toList(growable: false);
 
     }
@@ -94,7 +141,7 @@ class ServiceControllerApi {
   /// Parameters:
   ///
   /// * [int] professionId (required):
-  Future<List<Service>?> getRecommendedServices(int professionId,) async {
+  Future<List<ServicesPOJO>?> getRecommendedServices(int professionId,) async {
     final response = await getRecommendedServicesWithHttpInfo(professionId,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
@@ -104,8 +151,8 @@ class ServiceControllerApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       final responseBody = await _decodeBodyBytes(response);
-      return (await apiClient.deserializeAsync(responseBody, 'List<Service>') as List)
-        .cast<Service>()
+      return (await apiClient.deserializeAsync(responseBody, 'List<ServicesPOJO>') as List)
+        .cast<ServicesPOJO>()
         .toList(growable: false);
 
     }
