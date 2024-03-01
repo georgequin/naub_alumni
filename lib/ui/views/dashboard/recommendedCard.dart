@@ -44,6 +44,8 @@ class ReccommendedCard extends StatelessWidget {
                       fontSize: 24, // Adjust font size as needed
                       fontWeight: FontWeight.bold,
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   Text(
                     buttonText,
@@ -52,6 +54,8 @@ class ReccommendedCard extends StatelessWidget {
                       decoration: TextDecoration.underline,
                       fontSize: 14, // Adjust font size as needed
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),

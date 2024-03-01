@@ -18,23 +18,23 @@ class StartupViewModel extends BaseViewModel {
 
 
     String? token = await locator<LocalStorage>().fetch(LocalStorageDir.authToken);
-    UserPOJO? user = await locator<LocalStorage>().fetch(LocalStorageDir.authUser);
+    String? userJson = await locator<LocalStorage>().fetch(LocalStorageDir.authUser);
     bool? onboarded = await locator<LocalStorage>().fetch(LocalStorageDir.onboarded);
 
     if (onboarded == null || onboarded == false) {
       _navigationService.replaceWithOnboardingView();
     } else {
-      if (token != null && user != null) {
+      if (token != null && userJson != null) {
+        print('token is not null, user isnt also');
         userLoggedIn.value = true;
+        Map<String, dynamic> userMap = jsonDecode(userJson);
+        UserPOJO user = UserPOJO.fromJson(userMap)!;
         profile.value = user;
         _navigationService.replaceWithHomeView();
       }else{
-        if(user != null){
-          profile.value = user;}
+        print('both token and user is null');
         _navigationService.replaceWithLoginView();
-
       }
-
 
     }
   }

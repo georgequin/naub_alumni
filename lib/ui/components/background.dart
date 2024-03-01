@@ -16,13 +16,6 @@ class Background extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           color: kcPrimaryColor,
         ),
-        Image.asset(
-          "assets/images/bg.png",
-          fit: BoxFit.cover,
-          color: Colors.white,
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-        ),
         ...children
       ],
     );

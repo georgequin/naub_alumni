@@ -12,6 +12,8 @@ import 'package:stacked/stacked.dart';
 import '../../../utils/base64Image.dart';
 import '../../common/app_colors.dart';
 import '../../common/ui_helpers.dart';
+import '../../components/empty_state.dart';
+import '../account/profile.dart';
 import 'dashboard_viewmodel.dart';
 import 'details_view.dart';
 
@@ -105,19 +107,25 @@ class DashboardView extends StackedView<DashboardViewModel> {
                     ],
                   )
                 ),
-                Container(
-                  padding: EdgeInsets.all(6), // You can adjust the padding to your needs
-                  decoration: BoxDecoration(
-                    color: kcPrimaryColor.withOpacity(0.4), // Background color
-                    shape: BoxShape.circle, // Makes the container circular
-                  ),
-                  child: Icon(
+
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ProfilePage(),
+                    ));
+                  },
+                  child:  profile.value.picture != null ?
+                  CircleAvatar(
+                    radius: 29,
+                    backgroundColor: Colors.grey.shade200,
+                    backgroundImage: MemoryImage(base64Decode(profile.value.picture!.url!)),
+                    // child: _imageBytes == null ? const Text('NGN') : null,
+                  )  : const Icon(
                     Icons.person_2_rounded,
                     color: kcPrimaryColor, // Icon content color
                     size: 29,
                   ),
                 )
-
               ],
             ),
             if (viewModel.isCardVisible)
@@ -240,15 +248,18 @@ class DashboardView extends StackedView<DashboardViewModel> {
                     child: CircularProgressIndicator(),
                   )
                 : viewModel.services.isEmpty ?
-            const Center(child: Text('No service available')) :
+            const Center(child: const EmptyState(
+              animation: "no_services.json",
+              label: "No Services Yet",
+            )) :
             GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 1,
-                  mainAxisSpacing: 8,
-                  childAspectRatio: 0.5,
+                  mainAxisSpacing: 0,
+                  childAspectRatio: 0.8,
                 ),
                 itemCount: viewModel.services.length,
                 itemBuilder: (context, index) {
@@ -299,6 +310,8 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                 borderRadius: const BorderRadius.all( Radius.circular(12)
                                 ),
                                 child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Base64Image(
                                       base64String: service.picture?.url,
@@ -308,41 +321,29 @@ class DashboardView extends StackedView<DashboardViewModel> {
                                     ),
                                     Padding( // Add padding to the row
                                       padding: const EdgeInsets.fromLTRB(5.0, 5.0, 5.0,0), // Adjust padding as needed
-                                      child:Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            service.title ?? 'service title',
-
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: uiMode.value == AppUiModes.light ? kcSecondaryColor : kcWhiteColor,
-                                                fontWeight: FontWeight.bold,
-                                                fontFamily: "Panchang"
-                                            ),
-                                            maxLines: 3,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ],
+                                      child: Text(
+                                        service.title ?? 'service title',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: uiMode.value == AppUiModes.light ? kcSecondaryColor : kcWhiteColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: "Panchang"
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                     Padding( // Add padding to the row
                                       padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0,8.0), // Adjust padding as needed
-                                      child:Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            service.provider ?? 'service provider',
-                                            style:  TextStyle(
-                                                fontSize: 14,
-                                                color: uiMode.value == AppUiModes.light ? kcWhiteColor : kcWhiteColor,
-                                                fontFamily: "Panchang"
-                                            ),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-
-                                        ],
+                                      child:Text(
+                                        service.provider ?? 'service provider',
+                                        style:  TextStyle(
+                                            fontSize: 10,
+                                            color: uiMode.value == AppUiModes.light ? kcWhiteColor : kcWhiteColor,
+                                            fontFamily: "Panchang"
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ],
@@ -352,7 +353,6 @@ class DashboardView extends StackedView<DashboardViewModel> {
                           ],
                         ),),
                       ),
-                      verticalSpaceMedium
                     ],
                   );
                 }),

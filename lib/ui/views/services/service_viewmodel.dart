@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:kenmack/core/network/loggingApiClient.dart';
 import 'package:stacked/stacked.dart';
 import 'package:openapi/api.dart';
 
@@ -12,7 +13,7 @@ class ServiceViewModel extends BaseViewModel {
   List<ServicesPOJO> services = [];
   List<ServicesPOJO> filteredServices = [];
   String searchQuery = '';
-  final ApiManager _apiManager = ApiManager(locator<ApiClient>());
+  final ApiManager _apiManager = ApiManager(locator<LoggingApiClient>());
 
   ServiceViewModel() {
     fetchServices();

@@ -82,7 +82,60 @@ class _LoginPageState extends State<Login> {
                         child: Text('Forgot Password?', style: TextStyle(color: kcPrimaryColor),  textAlign: TextAlign.right,),
                       ),
                   ),
-                  SizedBox(height: 16),
+                  verticalSpaceTiny,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        onTap: model.toggleRemember,
+                        child: Row(
+                          children: [
+                            Container(
+                                height: 20,
+                                width: 20,
+                                decoration: BoxDecoration(
+                                    color: model.remember
+                                        ? kcPrimaryColor
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(
+                                        color: model.remember
+                                            ? Colors.transparent
+                                            : kcPrimaryColor)),
+                                child: model.remember
+                                    ? const Center(
+                                  child: Icon(
+                                    Icons.check,
+                                    color: kcWhiteColor,
+                                    size: 14,
+                                  ),
+                                )
+                                    : const SizedBox()),
+                            horizontalSpaceSmall,
+                            const Text(
+                              "Remember Me",
+                              style: TextStyle(
+                                  fontSize: 14, decoration: TextDecoration.underline),
+                            )
+                          ],
+                        ),
+                      ),
+                      // InkWell(
+                      //   onTap: () {
+                      //     locator<NavigationService>()
+                      //         .navigateToChangePasswordView(isResetPassword: true);
+                      //   },
+                      //   child: const Text(
+                      //     "Forgot password?",
+                      //     style: TextStyle(
+                      //       fontSize: 16,
+                      //       color: kcSecondaryColor,
+                      //     ),
+                      //   ),
+                      // )
+                    ],
+                  ),
+                  verticalSpaceMedium,
                   SubmitButton(
                     isLoading: model.isBusy,
                     boldText: true,

@@ -16,6 +16,7 @@ Method | HTTP request | Description
 [**refreshToken**](UserControllerApi.md#refreshtoken) | **POST** /auth/refresh-token | 
 [**registerUser**](UserControllerApi.md#registeruser) | **POST** /auth/register | Receives user details and create new user
 [**updateUserDetails**](UserControllerApi.md#updateuserdetails) | **PUT** /auth/user/{id}/details | 
+[**updateUserProfilePicture**](UserControllerApi.md#updateuserprofilepicture) | **POST** /auth/{userId}/profile-picture | 
 
 
 # **getAllCountries**
@@ -281,6 +282,49 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **int**|  | 
  **userDetailDTO** | [**UserDetailDTO**](UserDetailDTO.md)|  | 
+
+### Return type
+
+[**Object**](Object.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: */*
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **updateUserProfilePicture**
+> Object updateUserProfilePicture(userId, body)
+
+
+
+### Example
+```dart
+import 'package:openapi/api.dart';
+
+final api_instance = UserControllerApi();
+final userId = 789; // int | 
+final body = String(); // String | 
+
+try {
+    final result = api_instance.updateUserProfilePicture(userId, body);
+    print(result);
+} catch (e) {
+    print('Exception when calling UserControllerApi->updateUserProfilePicture: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **userId** | **int**|  | 
+ **body** | **String**|  | 
 
 ### Return type
 

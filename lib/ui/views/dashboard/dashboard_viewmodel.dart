@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 
+import 'package:kenmack/core/network/loggingApiClient.dart';
 import 'package:openapi/api.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 import '../../../app/app.locator.dart';
 import '../../../app/app.logger.dart';
@@ -15,7 +17,7 @@ import '../../../state.dart';
 
 class DashboardViewModel extends BaseViewModel {
 
-  final ApiManager _apiManager = ApiManager(locator<ApiClient>());
+  final ApiManager _apiManager = ApiManager(locator<LoggingApiClient>());
 
   int selectedIndex = 0;
   final log = getLogger("DashboardViewModel");

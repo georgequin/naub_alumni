@@ -21,7 +21,7 @@ class EmptyState extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Lottie.asset("assets/animations/$animation"),
+          Lottie.asset("assets/animations/$animation", height: 100),
           verticalSpaceMedium,
           Text(
             label,

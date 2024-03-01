@@ -6,6 +6,7 @@
 
 // ignore_for_file: public_member_api_docs, implementation_imports, depend_on_referenced_packages
 
+import 'package:kenmack/core/network/loggingApiClient.dart';
 import 'package:openapi/api.dart';
 import 'package:stacked_services/src/bottom_sheet/bottom_sheet_service.dart';
 import 'package:stacked_services/src/dialog/dialog_service.dart';
@@ -35,5 +36,5 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => SnackbarService());
   locator.registerLazySingleton(() => ApiService());
   locator.registerLazySingleton(() => LocalStorage());
-  locator.registerLazySingleton(() => ApiClient());
+  locator.registerLazySingleton(() => LoggingApiClient());
 }

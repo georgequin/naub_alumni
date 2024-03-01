@@ -62,7 +62,7 @@ class ServiceView extends StackedView<ServiceViewModel> {
                     child: GridView.builder(
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        childAspectRatio: 0.5,
+                        childAspectRatio: 0.8,
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,
                       ),
@@ -125,41 +125,30 @@ class ServiceCard extends StatelessWidget {
                         ),
                         Padding( // Add padding to the row
                           padding: const EdgeInsets.fromLTRB(5.0, 5.0, 5.0,0), // Adjust padding as needed
-                          child:Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                service.title ?? 'service title',
+                          child: Text(
+                            service.title ?? 'service title',
 
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: uiMode.value == AppUiModes.light ? kcSecondaryColor : kcWhiteColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: "Panchang"
-                                ),
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: uiMode.value == AppUiModes.light ? kcSecondaryColor : kcWhiteColor,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "Panchang"
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         Padding( // Add padding to the row
                           padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0,8.0), // Adjust padding as needed
-                          child:Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                service.provider ?? 'service provider',
-                                style:  TextStyle(
-                                    fontSize: 14,
-                                    color: uiMode.value == AppUiModes.light ? kcWhiteColor : kcWhiteColor,
-                                    fontFamily: "Panchang"
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-
-                            ],
+                          child:Text(
+                            service.provider ?? 'service provider',
+                            style:  TextStyle(
+                                fontSize: 10,
+                                color: uiMode.value == AppUiModes.light ? kcWhiteColor : kcWhiteColor,
+                                fontFamily: "Panchang"
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],

@@ -68,6 +68,7 @@ Class | Method | HTTP request | Description
 *UserControllerApi* | [**refreshToken**](doc//UserControllerApi.md#refreshtoken) | **POST** /auth/refresh-token | 
 *UserControllerApi* | [**registerUser**](doc//UserControllerApi.md#registeruser) | **POST** /auth/register | Receives user details and create new user
 *UserControllerApi* | [**updateUserDetails**](doc//UserControllerApi.md#updateuserdetails) | **PUT** /auth/user/{id}/details | 
+*UserControllerApi* | [**updateUserProfilePicture**](doc//UserControllerApi.md#updateuserprofilepicture) | **POST** /auth/{userId}/profile-picture | 
 
 
 ## Documentation For Models

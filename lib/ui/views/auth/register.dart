@@ -345,30 +345,30 @@ class _RegisterState extends State<Register> {
                           ],
                         ),
                       ),
-                      verticalSpaceSmall,
-                      InkWell(
-                        onTap: () async {
-                          final Uri toLaunch =
-                          Uri(scheme: 'https', host: 'www.kenmack.com', path: '/');
-
-                          if (!await launchUrl(toLaunch, mode: LaunchMode.inAppBrowserView)) {
-                            throw Exception('Could not launch www.kenmack.com/');
-                          }
-                        },
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              "View our Privacy Policy",
-                              style: TextStyle(
-                                fontSize: 15,
-                                decoration: TextDecoration.underline,
-                                color: kcSecondaryColor, // Feel free to change the color
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // verticalSpaceSmall,
+                      // InkWell(
+                      //   onTap: () async {
+                      //     final Uri toLaunch =
+                      //     Uri(scheme: 'https', host: 'www.kenmack.com', path: '/');
+                      //
+                      //     if (!await launchUrl(toLaunch, mode: LaunchMode.inAppBrowserView)) {
+                      //       throw Exception('Could not launch www.kenmack.com/');
+                      //     }
+                      //   },
+                      //   child: const Row(
+                      //     mainAxisAlignment: MainAxisAlignment.start,
+                      //     children: [
+                      //       Text(
+                      //         "View our Privacy Policy",
+                      //         style: TextStyle(
+                      //           fontSize: 15,
+                      //           decoration: TextDecoration.underline,
+                      //           color: kcSecondaryColor, // Feel free to change the color
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                       verticalSpaceMedium,
                       SubmitButton(
                         isLoading: model.isBusy,

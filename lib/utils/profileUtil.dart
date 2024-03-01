@@ -1,10 +1,11 @@
+import 'package:kenmack/core/network/loggingApiClient.dart';
 import 'package:kenmack/state.dart';
 import 'package:openapi/api.dart';
 import '../app/app.locator.dart';
 import '../core/network/api_manager.dart';
 
 class ProfileUtil {
-  final ApiManager _apiManager = ApiManager(locator<ApiClient>());
+  final ApiManager _apiManager = ApiManager(locator<LoggingApiClient>());
 
   Future<void> getProfile() async {
     try {

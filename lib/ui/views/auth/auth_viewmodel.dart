@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl_phone_field/phone_number.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:kenmack/core/network/loggingApiClient.dart';
 import 'package:openapi/api.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -14,21 +15,18 @@ import 'package:stacked_services/stacked_services.dart';
 import '../../../app/app.locator.dart';
 import '../../../app/app.logger.dart';
 import '../../../app/app.router.dart';
-import '../../../app/model/repositories/repository.dart';
 import '../../../core/network/api_manager.dart';
-import '../../../core/network/api_response.dart';
-import '../../../core/network/api_service.dart';
-import '../../../core/network/handle_api_error.dart';
 import '../../../core/utils/local_store_dir.dart';
 import '../../../core/utils/local_stotage.dart';
 import '../../../state.dart';
+import '../../../utils/success_page.dart';
 
 enum RegistrationResult { success, failure }
 class AuthViewModel extends BaseViewModel {
   final log = getLogger("AuthViewModel");
   final snackBar = locator<SnackbarService>();
 
-  final ApiManager _apiManager = ApiManager(locator<ApiClient>());
+  final ApiManager _apiManager = ApiManager(locator<LoggingApiClient>());
   final firstname = TextEditingController();
   final lastname = TextEditingController();
   final email = TextEditingController();
@@ -49,8 +47,11 @@ class AuthViewModel extends BaseViewModel {
 
   init() async {
     getProfessions();
+    bool rem = await locator<LocalStorage>().fetch(LocalStorageDir.remember);
+    String? lastEmail = await locator<LocalStorage>().fetch(LocalStorageDir.lastEmail);
     String? token = await locator<LocalStorage>().fetch(LocalStorageDir.authToken);
-    if (token != null && JwtDecoder.isExpired(token)) {
+    remember = rem;
+    if (remember && token != null && JwtDecoder.isExpired(token)) {
         userLoggedIn.value = true;
         UserPOJO? userJson = await locator<LocalStorage>().fetch(LocalStorageDir.authUser);
         if (userJson != null) {
@@ -66,6 +67,12 @@ class AuthViewModel extends BaseViewModel {
       locator<NavigationService>().clearStackAndShow(Routes.loginView);
     }
 
+    if (remember) {
+      String? lastEmail = await locator<LocalStorage>().fetch(LocalStorageDir.lastEmail);
+      if (lastEmail != null) {
+        email.text = lastEmail;
+      }
+    }
 
     rebuildUi();
   }
@@ -104,8 +111,18 @@ class AuthViewModel extends BaseViewModel {
         String token = response.data?.accessToken ?? "";
         String refreshToken = response.data?.refreshToken ?? "";
 
+        String userJson = jsonEncode(response.data?.user.toJson());
+        await locator<LocalStorage>().save(LocalStorageDir.authUser, userJson);
+
         await locator<LocalStorage>().save(LocalStorageDir.authToken, token);
+        await locator<LocalStorage>().save(LocalStorageDir.authUser, userJson);
         await locator<LocalStorage>().save(LocalStorageDir.authRefreshToken, refreshToken);
+        locator<LocalStorage>().save(LocalStorageDir.remember, remember);
+        if (remember) {
+          locator<LocalStorage>().save(LocalStorageDir.lastEmail, email.text);
+        } else {
+          locator<LocalStorage>().delete(LocalStorageDir.lastEmail);
+        }
 
         locator<NavigationService>().clearStackAndShow(Routes.homeView);
       } else {
@@ -145,13 +162,36 @@ class AuthViewModel extends BaseViewModel {
       print('value of reg response is : $response');
 
       if (response != null && response.success) {
-        locator<NavigationService>().clearStackAndShow(Routes.loginView);
+        locator<NavigationService>().navigatorKey?.currentState?.pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => SuccessPage(
+                title: "Congratulations!",
+                description: "Your account is ready!",
+                callback: () {
+                  locator<NavigationService>().clearStackAndShow(Routes.loginView);
+                },
+              ),
+            )
+        );
       } else {
         snackBar.showSnackbar(message: 'Unable to signup');
       }
     } catch (e) {
-      log.e('Login failed: $e');
-      // Here you handle errors. The ApiManager's performApiCall method should internally handle specific cases like showing a modal on session end.
+      log.e('signup failed: ${e}');
+      if(e.toString().contains('Could not find a suitable class for deserialization')){
+        print('controlled deserialize temporary');
+        locator<NavigationService>().navigatorKey?.currentState?.pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => SuccessPage(
+                title: "Congratulations!",
+                description: "Your account is ready!",
+                callback: () {
+                  locator<NavigationService>().clearStackAndShow(Routes.loginView);
+                },
+              ),
+            )
+        );
+      }
 
     } finally {
       setBusy(false);
@@ -173,8 +213,8 @@ class AuthViewModel extends BaseViewModel {
       }
     } catch (e) {
       log.e('No professions: $e');
-      // Here you handle errors. The ApiManager's performApiCall method should internally handle specific cases like showing a modal on session end.
-      snackBar.showSnackbar(message: e.toString());
+      // // Here you handle errors. The ApiManager's performApiCall method should internally handle specific cases like showing a modal on session end.
+      // snackBar.showSnackbar(message: e.toString());
     } finally {
       setBusy(false);
     }

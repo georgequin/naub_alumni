@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 
@@ -5,6 +6,7 @@ import 'package:http/http.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kenmack/core/network/loggingApiClient.dart';
 import 'package:kenmack/state.dart';
 import 'package:kenmack/utils/profileUtil.dart';
 import 'package:openapi/api.dart';
@@ -14,6 +16,7 @@ import 'dart:typed_data';
 
 import '../../../app/app.locator.dart';
 import '../../../core/network/api_manager.dart';
+import '../../../utils/base64Image.dart';
 import '../../common/app_colors.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -26,7 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
   bool isUpdating = false;
   int? _selectedCountryId;
   List<CountryPOJO> _countries = [];
-  final ApiManager _apiManager = ApiManager(locator<ApiClient>());
+  final ApiManager _apiManager = ApiManager(locator<LoggingApiClient>());
 
   // Use initial values from the profile state
   late TextEditingController _fullNameController = TextEditingController(text: '${profile.value.firstName} ${profile.value.lastName}');
@@ -66,6 +69,37 @@ class _ProfilePageState extends State<ProfilePage> {
       setState(() {});
     } catch (e) {
       print("Error fetching countries: $e");
+    }
+  }
+
+  Future<void> _updateProfileImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      final bytes = await File(pickedFile.path).readAsBytes();
+      setState(() {
+        _imageBytes = bytes;
+        // Convert image to base64 string
+        String base64Image = base64Encode(bytes);
+        _updateProfilePicture(base64Image);
+      });
+    }
+  }
+
+  Future<void> _updateProfilePicture(String base64Image) async {
+    // Assuming you have a method in your UserControllerApi for updating the profile picture
+    try {
+      await _apiManager.performApiCall(
+        apiCall: () => UserControllerApi(_apiManager.apiClient).updateUserProfilePicture(
+          profile.value.id!,
+          base64Image,
+        ),
+        endpoint: 'updateProfilePicture',
+      );
+      ProfileUtil().getProfile();
+    } catch (e) {
+      print("Error updating profile picture: $e");
     }
   }
 
@@ -166,12 +200,14 @@ class _ProfilePageState extends State<ProfilePage> {
           children: <Widget>[
             SizedBox(height: 24),
             GestureDetector(
-              onTap: (){},
+              onTap: (){
+                _updateProfileImage();
+              },
               child: CircleAvatar(
                 radius: 40,
                 backgroundColor: Colors.grey.shade200,
-                backgroundImage: _imageBytes != null ? MemoryImage(_imageBytes!) : null,
-                child: _imageBytes == null ? Text('NGN') : null,
+                backgroundImage: _imageBytes != null ? MemoryImage(_imageBytes!) : (profile.value.picture?.url != null ? MemoryImage(base64Decode(profile.value.picture!.url!)) : null),
+                // child: _imageBytes == null ? const Text('NGN') : const Text('NGN'),
               ),
             ),
             SizedBox(height: 16),
