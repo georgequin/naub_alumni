@@ -8,6 +8,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kenmack/core/network/loggingApiClient.dart';
 import 'package:kenmack/state.dart';
+import 'package:kenmack/ui/common/ui_helpers.dart';
 import 'package:kenmack/utils/profileUtil.dart';
 import 'package:openapi/api.dart';
 import 'package:path/path.dart' as path;
@@ -104,64 +105,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
 
-  // void _updateProfilePicture() async {
-  //   // pick photo
-  //   setState(() {
-  //     isUpdating = true;
-  //   });
-  //   final ImagePicker picker = ImagePicker();
-  //   final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-  //
-  //   if (image == null) return; // Handle null (user didn't pick an image)
-  //
-  //   String oldPath = image.path;
-  //   String newPath = '${path.withoutExtension(oldPath)}.png';
-  //   File inputFile = File(oldPath);
-  //   File outputFile = File(newPath);
-  //
-  //   XFile? result = await FlutterImageCompress.compressAndGetFile(
-  //     inputFile.path,
-  //     outputFile.path,
-  //     format: CompressFormat.png,
-  //   );
-  //
-  //   if (result == null) return;
-  //
-  //   // Check file size
-  //   final fileSize = await outputFile.length();
-  //   if (fileSize > 5 * 1024 * 1024) { // 5 MB size limit
-  //     locator<SnackbarService>().showSnackbar(message: "Please pick an image smaller than 5MB");
-  //     setState(() {
-  //       isUpdating = false;
-  //     });
-  //     return;
-  //   }
-  //
-  //   try {
-  //     // Prepare the request
-  //     UpdateUserProfilePictureRequest request = UpdateUserProfilePictureRequest(
-  //       file: await MultipartFile.fromPath( 'profile', outputFile.path),
-  //     );
-  //
-  //   final response = await _apiManager.performApiCall(
-  //         apiCall: () => UserControllerApi(_apiManager.apiClient)
-  //             .updateUserProfilePicture(profile.value.id!, updateUserProfilePictureRequest: request),
-  //         endpoint: 'countries'
-  //     );
-  //     if (response != null) {
-  //       locator<SnackbarService>().showSnackbar(message: "Profile picture updated successfully");
-  //       ProfileUtil().getProfile();
-  //     }
-  //   } catch (e) {
-  //     print("Error updating profile picture: $e");
-  //     locator<SnackbarService>().showSnackbar(message: "Error updating profile picture");
-  //   } finally {
-  //     setState(() {
-  //       isUpdating = false;
-  //     });
-  //   }
-  // }
-
   Future<void> _updateProfileDetails() async {
     // Implement your logic to update the profile details
     // Collect data from the TextEditingControllers and send to your backend or service
@@ -187,7 +130,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile Details'),
+        // title: Text('Profile Details'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -197,44 +140,74 @@ class _ProfilePageState extends State<ProfilePage> {
         child:  Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SizedBox(height: 24),
-            GestureDetector(
-              onTap: (){
-                _updateProfileImage();
-              },
-              child: CircleAvatar(
-                radius: 40,
-                backgroundColor: Colors.grey.shade200,
-                backgroundImage: _imageBytes != null ? MemoryImage(_imageBytes!) : (profile.value.picture?.url != null ? MemoryImage(base64Decode(profile.value.picture!.url!)) : null),
-                // child: _imageBytes == null ? const Text('NGN') : const Text('NGN'),
-              ),
+            Stack(
+              alignment: Alignment.center, // Align children at the bottom center
+              children: [
+                GestureDetector(
+                  onTap: _updateProfileImage,
+                  child: CircleAvatar(
+                    radius: 100,
+                    backgroundColor: Colors.grey.shade200,
+                    backgroundImage: _imageBytes != null ? MemoryImage(_imageBytes!) : (profile.value.picture?.url != null ? MemoryImage(base64Decode(profile.value.picture!.url!)) : null),
+                  ),
+                ),
+                verticalSpaceSmall,
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.5), // Semi-transparent black
+                    borderRadius: BorderRadius.circular(100), // Circular border to match the avatar
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  child:
+                  GestureDetector(
+                    onTap: _updateProfileImage,
+                    child: const Column(
+                      children: [
+                        Text(
+                          'Update',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                      ],
+                    )
+
+                  ),
+                ),
+
+              ],
             ),
+
             SizedBox(height: 16),
             Text('${profile.value.firstName} ${profile.value.lastName}' ?? 'user',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            Text('${profile.value.email}', style: Theme.of(context).textTheme.caption),
-            SizedBox(height: 24),
-            ListTile(
-              title: Text('Profile Details', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            ),
-             _buildTextField(_fullNameController, 'Full Name'),
-            _buildTextField(_emailController, 'email',  trailing: 'Not Verified', enabled: false),
-            _buildTextField(_phoneNumberController, 'Phone Number',  trailing: 'Not Verified'),
-            _buildCountryDropdown(),
-            SizedBox(height: 24),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 18.0),
-              child: ElevatedButton(
-                onPressed: () => _updateProfileDetails,
-                child: Text('Update Profile'),
-                style: ElevatedButton.styleFrom(
-                  shape: StadiumBorder(),
-                  backgroundColor: kcPrimaryColor,
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  minimumSize: Size(double.infinity, 50),
-                ),
+                style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
+            Text('${profile.value.email}',  style: TextStyle(fontSize: 16)),
+            Text('${profile.value.phone}',  style: TextStyle(fontSize: 16)),
+            Text('${profile.value.countryPOJO?.name ?? ''}',  style: TextStyle(fontSize: 16)),
+            verticalSpaceTiny,
+            // IconButton(
+            //   icon: Icon(Icons.edit_note_rounded),
+            //   onPressed: () => _showEditDialog(),
+            // ),
+            ElevatedButton(
+              onPressed: () => _showEditDialog(),
+              child: Text('Edit'),
+              style: ElevatedButton.styleFrom(
+                shape: StadiumBorder(),
+                backgroundColor: kcPrimaryColor,
+                padding: EdgeInsets.symmetric(vertical: 16),
+                minimumSize: Size(200, 50),
+
               ),
+            ),
+            ListTile(
+              title: Text('', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
           ],
         ),
@@ -278,6 +251,40 @@ class _ProfilePageState extends State<ProfilePage> {
     )
       );
 
+  }
+
+  void _showEditDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Edit Profile"),
+          icon: Icon(Icons.edit),
+          content: Column(
+            children: [
+              _buildTextField(_fullNameController, 'Full Name'),
+              _buildTextField(_phoneNumberController, 'Phone Number',  trailing: 'Not Verified'),
+              _buildCountryDropdown(),
+            ],
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                _updateProfileDetails();
+                Navigator.pop(context);
+              },
+              child: Text('Update'),
+              style: ElevatedButton.styleFrom(
+                shape: StadiumBorder(),
+                backgroundColor: kcPrimaryColor,
+                padding: EdgeInsets.symmetric(vertical: 16),
+                minimumSize: Size(double.infinity, 20),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
 

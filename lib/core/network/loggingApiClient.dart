@@ -1,6 +1,7 @@
 
 
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:kenmack/app/app.router.dart';
@@ -21,6 +22,9 @@ class LoggingApiClient extends ApiClient {
 
   final SnackbarService _snackbarService = locator<SnackbarService>();
   final NavigationService _navigationService = locator<NavigationService>();
+   Response response = Response('', 400);
+  int refreshTokenRetryCount = 0;
+  final int maxRetryCount = 3;
   var logger = Logger(
     printer: PrettyPrinter(),
   );
@@ -39,7 +43,7 @@ class LoggingApiClient extends ApiClient {
     // Log request details
     logger.i('Request: $method $basePath$path,\n Params: $queryParams , \n Body: $body');
     // Call the superclass's invokeAPI method to perform the actual API request
-    final response = await super.invokeAPI(
+     response = await super.invokeAPI(
       path,
       method,
       queryParams,
@@ -50,42 +54,76 @@ class LoggingApiClient extends ApiClient {
     );
 
     // Log the response details
-    logger.i('Response from $method $basePath$path: \n Status Code: ${response.statusCode}, \n Body: ${response.bowdy}');
-    return response;
-
-  } on ApiException catch (e) {
-    if (e.code == 401) {
+    logger.i('Response from $method $basePath$path: \n Status Code: ${response.statusCode}, \n Body: ${response.body}');
+    if (response.statusCode == 401) {
+      if (refreshTokenRetryCount >= maxRetryCount) {
+        // Reset counter and redirect user to login
+        refreshTokenRetryCount = 0;
+        print('retycount is $refreshTokenRetryCount');
+        _navigationService.navigateToLoginView();
+      }
+      refreshTokenRetryCount++;
       final refreshed = await _tryRefreshToken();
       if (refreshed) {
+        print('auth token has been refreshed');
         return await invokeAPI(path, method, queryParams, body, headerParams, formParams, contentType);
       }
+      _handleError(response, '$method $path');
     }
+
+    return response;
+
+  }  catch (e) {
+
+    print('caught an error which isnt 401');
     _handleError(e, '$method $path');
     rethrow;
   }
   }
 
 
-  void _handleError(dynamic error, String endpoint) {
+  void _handleError(dynamic error,  String endpoint) {
+    int statusCode = 0;
     String errorMessage = "An error occurred. Please try again.";
-    if (error is ApiException) {
-      switch (error.code) {
-        case 401:
-          errorMessage = "Session expired. Please login again.";
-          _navigationService.navigateToLoginView();
-          break;
-        case 404:
-          if (error.message?.contains('email') ?? false) {
-            errorMessage = "Email address already registered. Login or try another.";
-          } else if (error.message?.contains('phone') ?? false) {
-            errorMessage = "Phone number already registered. Try another.";
-          }
-          break;
-        default:
-          errorMessage = error.message ?? errorMessage;
+    if (error is Response) {
+      print('error is Response');
+      statusCode = error.statusCode;
+      try {
+        final decodedBody = json.decode(error.body);
+        errorMessage = decodedBody['error'] ?? decodedBody['message'] ?? errorMessage;
+      } catch (decodeError) {
+        errorMessage = error.body; // Fallback to raw response if decoding fails
       }
-    } else if (error is SocketException || error is TlsException || error is IOException || error is ClientException) {
+    } else if (error is ApiException) {
+      print('error is ApiException');
+      statusCode = error.code;
+      errorMessage = error.message ?? errorMessage;
+    } else if (error is SocketException || error is TlsException || error is IOException) {
+      print('error is Network related');
       errorMessage = "Network error. Check your connection and try again.";
+    }
+
+
+
+    switch (error.code) {
+      case 401:
+        errorMessage = "Session expired. Please login again.";
+        _navigationService.navigateToLoginView();
+        break;
+      case 404:
+        if (error.message?.contains('email') ?? false) {
+          errorMessage = "Email address already registered. Login or try another.";
+        } else if (error.message?.contains('phone') ?? false) {
+          errorMessage = "Phone number already registered. Try another.";
+        }else{
+          errorMessage = "Resource not found.";
+        }
+        break;
+      case 409:
+        errorMessage = "Conflict occurred.";
+        break;
+      default:
+        errorMessage = error.message ?? errorMessage;
     }
     logger.e('Error from $endpoint: $error');
     _snackbarService.showSnackbar(message: errorMessage);
@@ -115,7 +153,7 @@ class LoggingApiClient extends ApiClient {
 
         // Update the API client with the new access token
         addDefaultHeader('Authorization', 'Bearer $newAccessToken');
-        logger.i('Token refreshed successfully');
+        logger.i('Token refreshed successfully by default');
         return true;
       } else {
         logger.e('Failed to refresh token with the provided refresh token');

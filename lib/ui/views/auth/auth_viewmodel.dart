@@ -46,7 +46,6 @@ class AuthViewModel extends BaseViewModel {
 
 
   init() async {
-    getProfessions();
     bool rem = await locator<LocalStorage>().fetch(LocalStorageDir.remember);
     String? lastEmail = await locator<LocalStorage>().fetch(LocalStorageDir.lastEmail);
     String? token = await locator<LocalStorage>().fetch(LocalStorageDir.authToken);
@@ -197,62 +196,6 @@ class AuthViewModel extends BaseViewModel {
       setBusy(false);
     }
   }
-
-  Future<void> getProfessions() async{
-    try {
-      // Using ApiManager to perform the API call now
-      var response = await _apiManager.performApiCall(
-          apiCall: () => ProfessionControllerApi(_apiManager.apiClient).getAllProfessions(),
-          endpoint: 'get professions ${ProfessionControllerApi(_apiManager.apiClient).getAllProfessions()}'
-      );
-
-      if (response != null && response.success) {
-          professions = response.data;
-      } else {
-        snackBar.showSnackbar(message: 'couldnt get professions');
-      }
-    } catch (e) {
-      log.e('No professions: $e');
-      // // Here you handle errors. The ApiManager's performApiCall method should internally handle specific cases like showing a modal on session end.
-      // snackBar.showSnackbar(message: e.toString());
-    } finally {
-      setBusy(false);
-    }
-  }
-
-
-
-// void register() async {
-  //   setBusy(true);
-  //   try {
-  //     var apiService = locator<ApiService>();
-  //     var userApi = UserControllerApi(apiService.apiClient);
-  //
-  //     // Assuming you have collected these details from your UI
-  //     var registrationRequest = UserRegistrationDTO(
-  //       firstName: firstname.text,
-  //       lastName: lastname.text,
-  //       email: email.text,
-  //       phone: phone.text,
-  //       password: password.text,
-  //       // Add other required fields here...
-  //     );
-  //
-  //     var response = await userApi.registerUser(registrationRequest);
-  //
-  //     if (response!.success!) {
-  //       // Registration successful
-  //       snackBar.showSnackbar(message: 'Registration successful');
-  //       locator<NavigationService>().navigateTo(Routes.loginView); // Navigate to login or another appropriate view
-  //     } else {
-  //       // Show error message
-  //       snackBar.showSnackbar(message: response.message ?? 'Registration failed');
-  //     }
-  //   } on DioError catch (dioError) {
-  //     handleApiError(dioError);
-  //   }
-  //   setBusy(false);
-  // }
 
 
 }

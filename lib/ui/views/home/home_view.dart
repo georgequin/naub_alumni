@@ -46,15 +46,7 @@ class HomeView extends StackedView<HomeViewModel> {
                 icon: _navBarItemIcon(Icons.notifications, "Notification", viewModel.selectedTab == 2, iconColor),
                 label: "Notification",
               ),
-              // BottomNavigationBarItem(
-              //   icon: _navBarItemWithCounter(Icons.shopping_cart_outlined, viewModel.selectedTab == 2, cart, iconColor),
-              //   label: "Cart",
-              // ),
-              // //TODO : MAKE SURE TO CHECK WHY THE VALUE ISNT CORRECT
-              // BottomNavigationBarItem(
-              //   icon: _navBarItemWithCounter(Icons.notifications_none, viewModel.selectedTab == 3, filteredNotifications, iconColor),
-              //   label: "Notifications",
-              // ),
+
               BottomNavigationBarItem(
                 icon: _navBarItemIcon(Icons.person_outline, "Account", viewModel.selectedTab == 3, iconColor),
                 label: "Account",
